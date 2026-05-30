@@ -29,7 +29,9 @@ router.get("/new", isLoggedIn, (req, res) => {
 
 router.post("/", isLoggedIn, validateListing,
     wrapAsync(async (req, res, next) => {
+
         let newListing = new Listing(req.body.listing);
+        newListing.owner = req.user._id;
         await newListing.save();
         req.flash("success", "New listing created!");
         res.redirect("/listings")
@@ -39,11 +41,12 @@ router.post("/", isLoggedIn, validateListing,
 router.get("/:id", async (req, res) => {
     let { id } = req.params;
 
-    let listing = await Listing.findById(id).populate("reviews")
+    let listing = await Listing.findById(id).populate("reviews").populate("owner")
     if (!listing) {
         req.flash("error", "Listing Does not exist!");
         return res.redirect("/listings");
     }
+    console.log(listing);
     res.render("listings/show.ejs", { listing })
 })
 
@@ -55,6 +58,7 @@ router.get("/:id/edit", isLoggedIn, wrapAsync(async (req, res) => {
         req.flash("error", "Listing Does not exist!");
         return res.redirect("/listings");
     }
+
     res.render("listings/edit.ejs", { listing });
 }))
 //update after form redering
