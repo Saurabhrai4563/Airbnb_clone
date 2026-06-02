@@ -25,5 +25,6 @@ module.exports.isOwner = async (req, res, next) => {
         req.flash("error", "This listing doesn't belongs to you!");
         return res.redirect(`/listings/${id}`);
     }
+    next()
 }
 
