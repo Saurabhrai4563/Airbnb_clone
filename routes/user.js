@@ -15,7 +15,7 @@ router.post("/signup", wrapAsync(async (req, res) => {
         let { username, email, password } = req.body;
         const newUser = new User({ email, username });
         const registeredUser = await User.register(newUser, password);
-        console.log(registeredUser);
+        //console.log(registeredUser);
         //login
         req.login(registeredUser, (err) => {
             if (err) {
